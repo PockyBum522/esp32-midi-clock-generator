@@ -2,25 +2,19 @@
 
 hw_timer_t *timerConfiguration = NULL;
 
-bool currentState = 1;
+void IRAM_ATTR togglePinState();
 
-const int outputPin = 3;
-
-void IRAM_ATTR timerCallback()
-{
-    currentState = !currentState;
-
-    digitalWrite(outputPin, currentState);
-}
+const int outputPin = 4;
+bool currentState = true;
 
 void setup()
 {
     pinMode(outputPin, OUTPUT); // That tracks
-    digitalWrite(outputPin, 1); // ESP32: HIGH = 0v on pin, LOW = 3v3 on pin. Because that wouldn't have been easy to fix in their SDK, noooooo...
+    digitalWrite(outputPin, true); // ESP32: HIGH = 0v on pin, LOW = 3v3 on pin. Because that wouldn't have been easy to fix in their SDK, noooooo...
 
     Serial.begin(115200);
 
-    timerAttachInterrupt(timerConfiguration, &timerCallback, true);
+    timerAttachInterrupt(timerConfiguration, &togglePinState, true);
 
     timerAlarmWrite(timerConfiguration, 50, true); // Every 100 uS
 
@@ -29,5 +23,14 @@ void setup()
 
 void loop()
 {
+//    togglePinState();
+//
+//    delay(100); // ages
+}
 
+void togglePinState()
+{
+    currentState = !currentState;
+
+    digitalWrite(outputPin, currentState);
 }
