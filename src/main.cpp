@@ -20,9 +20,7 @@ void setup()
 
 void loop()
 {
-//    togglePinState();
-//
-//    delay(100);
+
 }
 
 void togglePinState()
