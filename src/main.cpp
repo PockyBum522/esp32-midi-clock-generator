@@ -3,8 +3,9 @@
 hw_timer_t *timerConfiguration = NULL;
 
 void IRAM_ATTR togglePinState();
+void initializeHardwareTimer();
 
-const int outputPin = 4;
+const int outputPin = 5;
 bool currentState = true;
 
 void setup()
@@ -14,18 +15,14 @@ void setup()
 
     Serial.begin(115200);
 
-    timerAttachInterrupt(timerConfiguration, &togglePinState, true);
-
-    timerAlarmWrite(timerConfiguration, 50, true); // Every 100 uS
-
-    timerAlarmEnable(timerConfiguration);
+    initializeHardwareTimer();
 }
 
 void loop()
 {
 //    togglePinState();
 //
-//    delay(100); // ages
+//    delay(100);
 }
 
 void togglePinState()
@@ -33,4 +30,15 @@ void togglePinState()
     currentState = !currentState;
 
     digitalWrite(outputPin, currentState);
+}
+
+void initializeHardwareTimer()
+{
+    timerConfiguration = timerBegin(0, 80, true);
+
+    timerAttachInterrupt(timerConfiguration, &togglePinState, true);
+
+    timerAlarmWrite(timerConfiguration, 50, true); // Cycle on/off totals 100 uS. 50us on then 50us off
+
+    timerAlarmEnable(timerConfiguration);
 }
