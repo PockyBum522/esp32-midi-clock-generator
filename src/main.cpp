@@ -20,7 +20,11 @@ void setup()
 
 void loop()
 {
+#if defined(ESP32)
+    Serial.println("I'm a esp32");
+#endif
 
+    delay(2000);
 }
 
 void togglePinState()
